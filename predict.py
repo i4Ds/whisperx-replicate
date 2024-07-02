@@ -30,7 +30,7 @@ class Predictor(BasePredictor):
         audio_file: Path = Input(description="Audio file"),
         output_format: str = Input(
             choices=["text", "srt", "vtt"],
-            default="plain text",
+            default="srt",
             description="Choose the format for the format",
         ),
         initial_prompt: str = Input(
