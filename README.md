@@ -1,20 +1,19 @@
-# whisperX on Replicate
+# Whisper-SG whisperX on Replicate
 
-This repo is the codebase behind the following Replicate models, which we use at [Upmeet](https://upmeet.ai):
-
-- [victor-upmeet/whisperx](https://replicate.com/victor-upmeet/whisperx) : if you don't know which model to use, use this one. It uses a low-cost hardware, which suits most cases
-- [victor-upmeet/whisperx-a40-large](https://replicate.com/victor-upmeet/whisperx-a40-large) : if you encounter some memory issues with previous models, consider this one. It can happen when dealing with long audio files and performing alignment and/or diarization
-- [victor-upmeet/whisperx-a100-80gb](https://replicate.com/victor-upmeet/whisperx-a100-80gb) : if you encounter some memory issues with previous models, consider this one. It can happen when dealing with long audio files and performing alignment and/or diarization
 
 # Model Information
+https://huggingface.co/i4ds/whisper4sg-srg-v2-full-mc-de-sg-corpus-v2
 
-WhisperX provides fast automatic speech recognition (70x realtime with large-v3) with word-level timestamps and speaker diarization.
+# How to use
+Install COG and Setup Replicate.
 
-Whisper is an ASR model developed by OpenAI, trained on a large dataset of diverse audio. Whilst it does produces highly accurate transcriptions, the corresponding timestamps are at the utterance-level, not per word, and can be inaccurate by several seconds. OpenAI’s whisper does not natively support batching, but WhisperX does.
+Use Locally:
+- Run `download_model.sh`
+- Predict with `cog predict -i audio_file=@<PATH TO FILE>`
 
-Model used is for transcription is large-v3 from faster-whisper.
-
-For more information about WhisperX, including implementation details, see the [WhisperX github repo](https://github.com/m-bain/whisperX).
+Deploy to Replicate:
+- Run `download_model.sh` 
+- cog push `YOUR REPOSITORY ON REPLICATE` (best to read the guide on replicate)
 
 # Citation
 
