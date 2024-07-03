@@ -1,21 +1,23 @@
-# Whisper-SG whisperX on Replicate
+# Whisper-SG WhisperX on Replicate
 
+Repository to create the COG image for the Swiss-German SOTA Whisper model.
 
-# Model Information
-https://huggingface.co/i4ds/whisper4sg-srg-v2-full-mc-de-sg-corpus-v2
+## Model Information
+[Whisper4SG-SRG-V2-Full-MC-DE-SG-Corpus-V2 on Hugging Face](https://huggingface.co/i4ds/whisper4sg-srg-v2-full-mc-de-sg-corpus-v2)
 
-# How to use
-Install COG and Setup Replicate.
+## How to Use
 
-Use Locally:
+### Install COG and Setup Replicate
+
+### Use Locally:
 - Run `download_model.sh`
 - Predict with `cog predict -i audio_file=@<PATH TO FILE>`
 
-Deploy to Replicate:
+### Deploy to Replicate:
 - Run `download_model.sh` 
-- cog push `YOUR REPOSITORY ON REPLICATE` (best to read the guide on replicate)
+- Run `cog push <YOUR REPOSITORY ON REPLICATE>` (best to read the guide on replicate)
 
-# Citation
+## Citation for WhisperX
 
 ```
 @misc{bain2023whisperx,
