@@ -7,3 +7,4 @@ hg_access_token.txt
 .env
 *.mp3
 .cog/*
+hf_home/*

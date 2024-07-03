@@ -1,6 +1,5 @@
 import gc
 import os
-import shutil
 import time
 from typing import Any
 
@@ -12,12 +11,11 @@ from pydub import AudioSegment
 
 compute_type = "float16"  # change to "int8" if low on GPU mem (may reduce accuracy)
 device = "cuda"
-whisper_model = 'i4ds/whisper4sg-srg-v2-full-mc-de-sg-corpus-v2'
-
-# HF Variables
-os.environ['HF_HOME'] = './hf'
-
-
+# Set Env variables
+os.environ['HF_HUB_OFFLINE'] = "1"
+os.environ['HF_HOME'] = 'hf_home'
+# Get Model
+whisper_model = f'{os.environ["HF_HOME"]}/hub/models--i4ds--whisper4sg-srg-v2-full-mc-de-sg-corpus-v2/snapshots/40d87fed2e282d9cb9843b9d1c9b04dee3725cde'
 class ModelOutput(BaseModel):
     transcription: str
     language: str
