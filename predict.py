@@ -123,11 +123,6 @@ class Predictor(BasePredictor):
             language=detected_language,
         )
 
-
-def get_audio_duration(file_path):
-    return len(AudioSegment.from_file(file_path))
-
-
 def align(audio, result, debug):
     start_time = time.time_ns() / 1e6
 
