@@ -15,7 +15,7 @@ Repository to create the COG image for the Swiss-German SOTA Whisper model.
 
 ### Deploy to Replicate:
 - Run `download_model.sh` 
-- Run `cog push <YOUR REPOSITORY ON REPLICATE>` (best to read the guide on replicate)
+- Run `cog push <YOUR REPOSITORY ON REPLICATE>` (best to read the guide on [Replicate](https://replicate.com))
 
 ## Citation for WhisperX
 
