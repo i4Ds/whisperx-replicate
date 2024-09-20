@@ -119,7 +119,6 @@ class Predictor(BasePredictor):
                 print(
                     f"max gpu memory allocated over runtime: {torch.cuda.max_memory_reserved() / (1024 ** 3):.2f} GB"
                 )
-        print(segments)
         subs = pysubs2.load_from_whisper(segments)
 
         if output_format == "text":

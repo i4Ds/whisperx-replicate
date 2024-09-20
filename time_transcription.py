@@ -64,6 +64,7 @@ def main(file_path, max_repeats=10, reps_per_length=3):
                     output = transcribe_audio(file)
                 duration = output['transcribe_ms'] / 1000  # Convert to seconds
                 duration_list.append(duration)
+                print(duration['transcription'])
 
             avg_duration = statistics.mean(duration_list)
             lengths.append(base_length * i)
