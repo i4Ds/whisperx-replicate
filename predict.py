@@ -9,7 +9,6 @@ from faster_whisper.audio import decode_audio
 from faster_whisper import WhisperModel
 from faster_whisper.transcribe import Segment
 from cog import BaseModel, BasePredictor, Input, Path
-from pydub import AudioSegment
 
 compute_type = "float16"  # change to "int8" if low on GPU mem (may reduce accuracy)
 device = "cuda"
