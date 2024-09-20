@@ -24,7 +24,7 @@ def transcribe_audio(audio_file_path):
     Output format is set to SRT.
     """
     output = replicate.run(
-        "kenfus/stt_test:5268e070efef5b3fd65480f9307e7b6828398b9deba956a78e20a5c88607b99c",
+        "kenfus/stt_test_a40:a3a36fd53bb7dadcdd3ce6d574cd13e36c496b0ff686b679a42092dcf4ec363c",
         input={
             "audio_file": audio_file_path,
             "debug": True,
