@@ -1,8 +1,8 @@
 --extra-index-url https://download.pytorch.org/whl/cu121
-torch==2.1.0+cu121
-torchvision==0.16.0+cu121
-torchaudio==2.1.0+cu121
+torchvision
+torchvision
+torchaudio
 pydub
 pysubs2
-replicate==0.27
-git+https://github.com/m-bain/whisperx.git
+replicate
+git+https://github.com/SYSTRAN/faster-whisper.git
