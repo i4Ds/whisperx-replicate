@@ -29,18 +29,12 @@ def transcribe_audio(audio_file_path):
             "audio_file": audio_file_path,
             "debug": True,
             "language": "de",
-            "threshold": 0.5,
-            "vad_filter": True,
-            "temperature": 0,
-            "output_format": "srt",
-            "speech_pad_ms": 400,
-            "min_speech_duration_ms": 250,
-            "min_silence_duration_ms": 2000
+            "output_format": "text",
         }
     )
     return output
 
 
 if __name__ == "__main__":
-    output = transcribe_audio(open("95_Würenlos.flac",  mode= "rb"))
+    output = transcribe_audio(open("84_Brugg.flac",  mode= "rb"))
     print(output)
