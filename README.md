@@ -17,15 +17,3 @@ Repository to create the COG image for the Swiss-German SOTA Whisper model.
 - Run `download_model.sh` 
 - Run `cog push <YOUR REPOSITORY ON REPLICATE>` (best to read the guide on [Replicate](https://replicate.com))
 
-## Citation for WhisperX
-
-```
-@misc{bain2023whisperx,
-      title={WhisperX: Time-Accurate Speech Transcription of Long-Form Audio}, 
-      author={Max Bain and Jaesung Huh and Tengda Han and Andrew Zisserman},
-      year={2023},
-      eprint={2303.00747},
-      archivePrefix={arXiv},
-      primaryClass={cs.SD}
-}
-```
