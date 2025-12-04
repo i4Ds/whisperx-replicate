@@ -77,7 +77,7 @@ cog predict -i audio_file=@your_audio.mp3
 ### Example
 
 ```bash
-cog predict -i audio_file=@interview.mp3 -i batch_size=16 -i align_output=true
+cog predict -i audio_file=@interview.mp3
 ```
 
 ### Output
