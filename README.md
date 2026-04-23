@@ -1,113 +1,150 @@
-# WhisperX Replicate
+# STT4SG Replicate
 
-A [Cog](https://github.com/replicate/cog)-based deployment of WhisperX for German speech-to-text transcription using the `faster-whisper-large-v3-turbo` model.
+This repo is now a Cog/Replicate wrapper around [`i4Ds/stt4sg-transcribe`](https://github.com/i4Ds/stt4sg-transcribe), with the pipeline vendored locally and a repo-local model/cache layout so the same assets are available both on the host and inside the built image.
 
-## Overview
+## What Changed
 
-This repository packages WhisperX as a Replicate-compatible model, enabling easy deployment and inference via Cog. It uses:
+- Replaced the old WhisperX-only predictor with the STT4SG transcription pipeline.
+- Added a `uv` project (`pyproject.toml`, `uv.lock` once generated) for local development.
+- Added repo-local cache helpers so Whisper, alignment, Silero, and pyannote assets can live under `model-store/`.
+- Exposed the upstream pipeline parameters through Cog inputs instead of hardcoding a narrow set.
 
-- **WhisperX** (i4ds fork) for transcription with VAD (Voice Activity Detection)
-- **faster-whisper-large-v3-turbo** model for fast, accurate German transcription
-- **Cog** for containerization and deployment to Replicate
+## Local Layout
 
-## Prerequisites
+Downloaded assets are stored locally in this repository:
 
-- [Cog](https://github.com/replicate/cog) installed
-- NVIDIA GPU with CUDA 12.1 support
-- Docker
+```text
+model-store/
+├── whisper/        # local faster-whisper model directories
+├── alignment/      # torchaudio / HF alignment models
+├── huggingface/    # pyannote and other HF caches
+├── torch/          # torch / torchaudio cache
+├── xdg/            # xdg cache used by some backends
+├── speechbrain/    # optional speechbrain cached models
+└── nemo/           # optional nemo assets
+```
+
+That directory is copied into the Cog build context, so pre-downloaded assets are available inside the container without extra runtime downloads.
 
 ## Setup
 
-### 1. Download the Model
-
-First, download the model to your Hugging Face cache. You can use the helper script:
+Create the local environment:
 
 ```bash
-python get_models.py
+uv venv
+source .venv/bin/activate
+uv sync
 ```
 
-This will download the model (`i4ds/daily-brook-134`) to your local Hugging Face cache.
-
-### 2. Copy Model to Repository
-
-Copy the cached model to the `models/` directory:
+Prefetch the default local assets:
 
 ```bash
-./copy_models.sh
+uv run python scripts/download_assets.py
 ```
 
-This creates the following structure:
+Notes:
 
-```
-models/
-└── faster-whisper-large-v3-turbo/
-    ├── config.json
-    ├── tokenizer.json
-    ├── vocabulary.json
-    └── ...
+- Default Whisper model: `i4ds/daily-brook-134`
+- Default alignment model: `VOXPOPULI_ASR_BASE_10K_DE`
+- Silero is prefetched automatically.
+- Pyannote downloads require a Hugging Face token or an existing local HF login. The script will use your saved local login if one exists.
+
+You can prefetch additional Whisper models too:
+
+```bash
+uv run python scripts/download_assets.py \
+  --whisper-model i4ds/daily-brook-134 \
+  --whisper-model Systran/faster-whisper-large-v3
 ```
 
-### 3. Build the Cog Image
+## Local CLI Usage
+
+Run the vendored pipeline directly:
+
+```bash
+uv run main.py 97_Brugg.mp3
+```
+
+Example with explicit parameters:
+
+```bash
+uv run main.py 97_Brugg.mp3 \
+  --model i4ds/daily-brook-134 \
+  --vad-method silero \
+  --batch-size 8 \
+  --no-alignment
+```
+
+## Cog Usage
+
+Build the image:
 
 ```bash
 cog build
 ```
 
-## Usage
-
-### Run a Prediction
+Run the included test file:
 
 ```bash
-cog predict -i audio_file=@your_audio.mp3
+cog predict \
+  -i audio_file=@97_Brugg.mp3 \
+  -i model=i4ds/daily-brook-134 \
+  -i use_vad=true \
+  -i vad_method=silero \
+  -i use_alignment=true
 ```
 
-### Input Parameters
+The predictor returns:
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `audio_file` | Audio file to transcribe | (required) |
-| `language` | Language (fixed to German) | `de` |
-| `batch_size` | Parallelization for transcription | `8` |
-| `temperature` | Sampling temperature | `0` |
-| `vad_onset` | VAD onset threshold | `0.500` |
-| `vad_offset` | VAD offset threshold | `0.363` |
-| `align_output` | Enable word-level timestamps | `False` |
-| `debug` | Print timing/memory info | `True` |
+- `srt_file`
+- `srt_content`
+- `detected_language`
+- `duration_seconds`
+- `num_segments`
+- `logs_zip` when log saving is enabled
 
-### Example
+## Cog Inputs
 
-```bash
-cog predict -i audio_file=@interview.mp3
-```
+The Cog predictor surfaces the upstream runtime controls:
 
-### Output
+- `audio_file`
+- `model`
+- `language`
+- `task`
+- `log_progress`
+- `use_vad`
+- `vad_method`
+- `vad_params`
+- `diarization`
+- `diarization_method`
+- `diarization_params`
+- `num_speakers`
+- `min_speakers`
+- `max_speakers`
+- `use_alignment`
+- `alignment_model`
+- `batch_size`
+- `device`
+- `compute_type`
+- `include_speaker_labels`
+- `save_logs`
+- `hf_token`
 
-The prediction returns:
+`vad_params` and `diarization_params` are JSON strings so backend-specific parameters can be passed through unchanged.
 
-- **segments**: Transcription in SRT subtitle format
-- **detected_language**: The detected language code (e.g., `de`)
-
-## File Structure
-
-```
-├── cog.yaml              # Cog configuration (CUDA, Python, dependencies)
-├── predict.py            # Main prediction class for Cog
-├── requirements.txt      # Python dependencies
-├── copy_models.sh        # Script to copy model from HF cache
-├── get_vad_model_url.py  # Helper to download model
-└── models/               # Local model directory
-    └── faster-whisper-large-v3-turbo/
-```
-
-## Deployment to Replicate
+## Replicate Push
 
 ```bash
 cog login
-cog push r8.im/your-username/whisperx-german
+cog push r8.im/your-username/stt4sg-replicate
 ```
 
-## Notes
+## Verification Target
 
-- The model is hardcoded to German (`de`) transcription
-- Uses `float16` compute type for GPU efficiency
-- VAD is enabled by default for better handling of speech segments
+The intended smoke test for this repo is:
+
+```bash
+cog predict -i audio_file=@97_Brugg.mp3
+```
+
+If pyannote assets are not available locally, keep `diarization=false` and use `vad_method=silero` for the basic transcription path.

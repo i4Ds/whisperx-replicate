@@ -1,8 +1,12 @@
 build:
-  cuda: "12.1"
+  cuda: "12.6"
   python_version: "3.11"
   gpu: true
   system_packages:
     - "ffmpeg"
+    - "git"
+    - "libgl1"
+    - "libglib2.0-0"
+    - "libsndfile1"
   python_requirements: requirements.txt
 predict: "predict.py:Predictor"

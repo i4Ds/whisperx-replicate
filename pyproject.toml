@@ -1,0 +1,41 @@
+[project]
+name = "stt4sg-replicate"
+version = "0.1.0"
+description = "Cog/Replicate wrapper for the i4Ds STT4SG transcription pipeline"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "cog>=0.16.8",
+    "faster-whisper>=1.2.1",
+    "huggingface-hub>=0.34.4",
+    "nemo-toolkit[asr]>=2.6.1",
+    "nltk>=3.9.2",
+    "numpy>=2.3.5",
+    "omegaconf>=2.3.0",
+    "pandas>=2.3.3",
+    "pyannote-audio>=4.0.3",
+    "pydub>=0.25.1",
+    "pysubs2>=1.8.0",
+    "ruamel-yaml==0.17.21",
+    "speechbrain>=1.0.3",
+    "torch>=2.8.0",
+    "torchaudio>=2.8.0",
+    "transformers>=4.40.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = [
+    "ctc_alignment",
+    "local_cache",
+    "main",
+    "pipeline",
+    "predict",
+    "srt_formatter",
+]
+
+[tool.setuptools.packages.find]
+include = ["vad_diarization"]
