@@ -8,6 +8,8 @@ from typing import Any, Dict, List, Optional, Union
 
 import torch
 
+from local_cache import DEFAULT_PYANNOTE_VAD_MODEL, resolve_hf_hub_snapshot
+
 from .base import SpeechSegment, VADProvider
 from .utils import get_device, load_audio_for_pyannote
 
@@ -30,9 +32,9 @@ class PyAnnoteVAD(VADProvider):
             from pyannote.audio.pipelines import VoiceActivityDetection
 
             logger.info("Loading PyAnnote VAD model...")
-            model = Model.from_pretrained(
-                "pyannote/segmentation-3.0", use_auth_token=self.use_auth_token
-            )
+            model_path = resolve_hf_hub_snapshot(DEFAULT_PYANNOTE_VAD_MODEL, "pytorch_model.bin")
+            token = None if model_path != DEFAULT_PYANNOTE_VAD_MODEL else self.use_auth_token
+            model = Model.from_pretrained(model_path, use_auth_token=token)
             self._pipeline = VoiceActivityDetection(segmentation=model)
             self._pipeline.to(torch.device(self.device))
 

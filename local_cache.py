@@ -22,6 +22,30 @@ DEFAULT_PYANNOTE_VAD_MODEL = "pyannote/segmentation-3.0"
 DEFAULT_PYANNOTE_DIARIZATION_MODEL = "pyannote/speaker-diarization-community-1"
 
 
+def resolve_hf_hub_snapshot(repo_id: str, filename: str | None = None) -> str:
+    """Return a local path for a cached HF Hub model file.
+
+    If *filename* is given, returns the path to that specific file inside the
+    snapshot directory (e.g. ``"pytorch_model.bin"`` or ``"config.yaml"``).
+    If *filename* is omitted, returns the snapshot directory itself.
+
+    Falls back to *repo_id* so callers still work when the model is not
+    pre-bundled (HF hub will download it at runtime if needed).
+    """
+    repo_dir = HF_HUB_CACHE / f"models--{repo_id.replace('/', '--')}"
+    refs_main = repo_dir / "refs" / "main"
+    if refs_main.exists():
+        snapshot_hash = refs_main.read_text(encoding="utf-8").strip()
+        snapshot_dir = repo_dir / "snapshots" / snapshot_hash
+        if snapshot_dir.exists():
+            if filename is None:
+                return str(snapshot_dir)
+            candidate = snapshot_dir / filename
+            if candidate.exists():
+                return str(candidate)
+    return repo_id
+
+
 def configure_local_caches() -> None:
     for path in (
         MODEL_STORE,

@@ -10,6 +10,8 @@ from typing import Any, Dict, Optional, Union
 import numpy as np
 import torch
 
+from local_cache import DEFAULT_PYANNOTE_DIARIZATION_MODEL, resolve_hf_hub_snapshot
+
 from .base import DiarizationProvider, DiarizationResult, SpeechSegment
 from .utils import get_device, load_audio_for_pyannote, parse_rttm
 
@@ -30,12 +32,12 @@ class PyAnnoteDiarization(DiarizationProvider):
         if self._pipeline is None:
             from pyannote.audio import Pipeline
 
-            pipeline_name = self.params.get(
-                "pipeline_name", "pyannote/speaker-diarization-community-1"
-            )
+            pipeline_name = self.params.get("pipeline_name", DEFAULT_PYANNOTE_DIARIZATION_MODEL)
+            model_path = resolve_hf_hub_snapshot(pipeline_name, "config.yaml")
+            token = None if model_path != pipeline_name else self.use_auth_token
 
             logger.info("Loading PyAnnote diarization pipeline...")
-            self._pipeline = Pipeline.from_pretrained(pipeline_name, token=self.use_auth_token)
+            self._pipeline = Pipeline.from_pretrained(model_path, use_auth_token=token)
             self._pipeline.to(torch.device(self.device))
             pipeline_params = self.params.get("pipeline_params")
             if pipeline_params:
