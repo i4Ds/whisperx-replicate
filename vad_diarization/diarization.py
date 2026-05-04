@@ -34,10 +34,9 @@ class PyAnnoteDiarization(DiarizationProvider):
 
             pipeline_name = self.params.get("pipeline_name", DEFAULT_PYANNOTE_DIARIZATION_MODEL)
             model_path = resolve_hf_hub_snapshot(pipeline_name, "config.yaml")
-            token = None if model_path != pipeline_name else self.use_auth_token
 
-            logger.info("Loading PyAnnote diarization pipeline...")
-            self._pipeline = Pipeline.from_pretrained(model_path, use_auth_token=token)
+            logger.info("Loading PyAnnote diarization pipeline from %s", model_path)
+            self._pipeline = Pipeline.from_pretrained(model_path)
             self._pipeline.to(torch.device(self.device))
             pipeline_params = self.params.get("pipeline_params")
             if pipeline_params:

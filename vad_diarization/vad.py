@@ -33,8 +33,7 @@ class PyAnnoteVAD(VADProvider):
 
             logger.info("Loading PyAnnote VAD model...")
             model_path = resolve_hf_hub_snapshot(DEFAULT_PYANNOTE_VAD_MODEL, "pytorch_model.bin")
-            token = None if model_path != DEFAULT_PYANNOTE_VAD_MODEL else self.use_auth_token
-            model = Model.from_pretrained(model_path, use_auth_token=token)
+            model = Model.from_pretrained(model_path)
             self._pipeline = VoiceActivityDetection(segmentation=model)
             self._pipeline.to(torch.device(self.device))
 

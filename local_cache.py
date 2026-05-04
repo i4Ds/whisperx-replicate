@@ -72,9 +72,12 @@ def configure_local_caches() -> None:
 
 
 def patch_torchaudio_compat() -> None:
-    try:
-        import torchaudio
-    except Exception:
+    # Only patch if torchaudio is already fully imported — never trigger the
+    # import here, as doing so at module-load time causes a circular-import
+    # error ("partially initialized module 'torchaudio' has no attribute 'lib'").
+    import sys
+    torchaudio = sys.modules.get("torchaudio")
+    if torchaudio is None:
         return
 
     if not hasattr(torchaudio, "_stt4sg_audio_backend"):

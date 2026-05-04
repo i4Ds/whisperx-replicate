@@ -97,7 +97,7 @@ class TranscriptionConfig:
     task: str = "transcribe"
     beam_size: int = 5
     batch_size: Optional[int] = None
-    word_timestamps: bool = True
+    word_timestamps: bool = False
     log_progress: bool = False
 
     use_alignment: bool = True
