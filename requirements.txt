@@ -668,13 +668,13 @@ toml==0.10.2
     # via nv-one-logger-core
 toolz==1.1.0
     # via cytoolz
---extra-index-url https://download.pytorch.org/whl/cu129
-torch==2.8.0+cu129
+--extra-index-url https://download.pytorch.org/whl/cu126
+torch==2.8.0+cu126
 torch-audiomentations==0.12.0
     # via pyannote-audio
 torch-pitch-shift==1.2.5
     # via torch-audiomentations
-torchaudio==2.8.0+cu129
+torchaudio==2.8.0+cu126
 torchcodec==0.10.0
     # via pyannote-audio
 torchmetrics==1.9.0

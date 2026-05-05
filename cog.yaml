@@ -1,5 +1,5 @@
 build:
-  cuda: "12.9"
+  cuda: "12.6"
   python_version: "3.11"
   gpu: true
   system_packages:
@@ -9,4 +9,6 @@ build:
     - "libglib2.0-0"
     - "libsndfile1"
   python_requirements: requirements.txt
+  run:
+    - "python -c 'import site; from pathlib import Path; Path(site.getsitepackages()[0], \"stt4sg-src.pth\").write_text(\"/src\\n\", encoding=\"utf-8\")'"
 predict: "predict.py:Predictor"
